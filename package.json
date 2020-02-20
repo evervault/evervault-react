@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@evervault/sdk": "^0.2.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0"
   },

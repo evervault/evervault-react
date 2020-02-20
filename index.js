@@ -1,13 +1,19 @@
 import React from 'react';
 import evervault from '@evervault/sdk'
 
-export default function withEvervault(WrappedComponent, MACHINE_NAME, DOMAIN) {
+export default function withEvervault(WrappedComponent, APP_ID, AUTH_URL, API_URL) {
   return class extends React.Component {
+    
     constructor(props) {
       super(props);
-      this.state = {
-        evervault: evervault(MACHINE_NAME, DOMAIN = 'https://auth.evervault.com')
-      }
+      evervault.init({auth: AUTH_URL, api: API_URL});
+      evervault.checkAuth(APP_ID);
+    }
+
+    componentDidMount() {
+      this.setState({
+        evervault
+      })
     }
     
     render() {
