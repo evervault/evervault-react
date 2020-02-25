@@ -1,7 +1,18 @@
 import React from 'react';
 import evervault from '@evervault/sdk'
 
-export default function withEvervault(WrappedComponent, APP_ID, AUTH_URL, API_URL) {
+const EvervaultContext = React.createContext(undefined);
+export EvervaultContext;
+
+export const useEvervault = () => {
+  const evervault = useContext(EvervaultContext);
+  if(!evervault){
+    throw new Error('evervault context could not be found. Please ensure that you have declared an evervault provider');
+  }
+  return evervault;
+}
+
+export default function withEvervault(WrappedComponent, APP_ID, AUTH_URL, API_URL, useEvervaultContext) {
   return class extends React.Component {
     state = {
       evervault: null
@@ -20,6 +31,13 @@ export default function withEvervault(WrappedComponent, APP_ID, AUTH_URL, API_UR
     }
     
     render() {
+      if(useEvervaultContext){
+        return (
+          <EvervaultContext.Provider value={this.state.evervault}>
+            <WrappedComponent />
+          </EvervaultContext.Provider>
+        );
+      }
       return(
         <WrappedComponent evervault={this.state.evervault} />
       )
