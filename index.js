@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import evervault from '@evervault/sdk'
 
 export const EvervaultContext = React.createContext(undefined);
