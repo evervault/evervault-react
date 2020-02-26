@@ -9,7 +9,7 @@ export function withEvervault(WrappedComponent, APP_ID, AUTH_URL, API_URL, useEv
   return class extends React.Component {
     constructor(props) {
       super(props);
-      evervault.init({auth: AUTH_URL, api: API_URL});
+      evervault.init({auth: AUTH_URL, api: API_URL}, { appId: APP_ID });
       evervault.checkAuth(APP_ID);
       this.state = { 
         evervault 
