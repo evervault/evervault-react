@@ -11,7 +11,7 @@ export function withEvervault(WrappedComponent, params) {
     constructor(props) {
       super(props);
       evervault.init({auth: authUrl, api: apiUrl}, { appId });
-      evervault.checkAuth(appId);
+      evervault.checkAuth();
       this.state = { 
         evervault 
       };
