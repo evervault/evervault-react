@@ -18,28 +18,26 @@ export function useEvervault() {
 
 
 export function withEvervault(WrappedComponent, params) {
-  const {appId, authUrl, apiUrl, useEvervaultContext} = params;
+  const { appId, authUrl, apiUrl, useEvervaultContext } = params;
   return class extends React.Component {
     constructor(props) {
       super(props);
-      evervault.init({auth: authUrl, api: apiUrl}, { appId });
+      evervault.init(appId, { auth: authUrl, api: apiUrl });
       evervault.checkAuth();
-      this.state = { 
-        evervault 
+      this.state = {
+        evervault,
       };
     }
-    
+
     render() {
-      if(useEvervaultContext){
+      if (useEvervaultContext) {
         return (
           <EvervaultProvider value={this.state.evervault}>
             <WrappedComponent />
           </EvervaultProvider>
         );
       }
-      return(
-        <WrappedComponent evervault={this.state.evervault} />
-      )
+      return <WrappedComponent evervault={this.state.evervault} />;
     }
-  }
+  };
 }
