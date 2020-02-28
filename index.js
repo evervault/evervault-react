@@ -1,11 +1,21 @@
-/** @format */
-
-import React from 'react';
-import evervault from '@evervault/sdk';
+import React, { useContext } from 'react';
+import evervault from '@evervault/sdk'
 
 export const EvervaultContext = React.createContext(undefined);
 export const EvervaultProvider = EvervaultContext.Provider;
 export const EvervaultConsumer = EvervaultContext.Consumer;
+
+export function useEvervault() {
+  const evervault = React.useContext(EvervaultContext);
+  if (!evervault) {
+    throw new Error('No context found for evervault');
+  }
+  if (typeof useContext !== "function") {
+    throw new Error('You must use React >= 16.8 in order to use useEvervault()');
+  }
+  return evervault;
+}
+
 
 export function withEvervault(WrappedComponent, params) {
   const { appId, authUrl, apiUrl, useEvervaultContext } = params;
