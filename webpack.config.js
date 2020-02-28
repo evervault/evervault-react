@@ -9,11 +9,6 @@ module.exports = {
     library: '',
     libraryTarget: 'umd'
   },
-  resolve: {
-    alias: {
-      react: path.resolve('./node_modules/react'),
-    }
-  },
   module: {
     rules: [
       {
@@ -34,7 +29,7 @@ module.exports = {
     ]
   },
   externals: {
-    react: 'react',
-    'react-dom': 'reactDOM'
-  },
+    'react': 'react', // Case matters here 
+    'react-dom' : 'reactDOM' // Case matters here 
+  }
 };
