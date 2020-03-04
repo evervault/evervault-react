@@ -1,6 +1,6 @@
 {
   "name": "@evervault/react",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "React package for the Evervault SDK",
   "main": "./build/lib/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@evervault/sdk": "^0.2.3",
+    "@evervault/sdk": "^0.3.2",
     "prop-types": "^15.7.2"
   },
   "devDependencies": {
