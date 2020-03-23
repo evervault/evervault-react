@@ -1,8 +1,16 @@
 /** @format */
 
-import React, { useContext } from "react";
-import PropTypes from "prop-types";
-import evervault from "@evervault/sdk";
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import evervault from '@evervault/sdk';
+
+import {
+  IWithEvervaultParams,
+  IWithEvervaultState,
+  IDataProps,
+  IDecryptProps,
+  IEvervaultForms,
+} from './typings';
 
 export const EvervaultContext = React.createContext(undefined);
 export const EvervaultProvider = EvervaultContext.Provider;
@@ -11,34 +19,28 @@ export const EvervaultConsumer = EvervaultContext.Consumer;
 export function useEvervault() {
   const evervault = React.useContext(EvervaultContext);
   if (!evervault) {
-    throw new Error("No context found for evervault");
+    throw new Error('No context found for evervault');
   }
-  if (typeof useContext !== "function") {
+  if (typeof useContext !== 'function') {
     throw new Error(
-      "You must use React >= 16.8 in order to use useEvervault()"
+      'You must use React >= 16.8 in order to use useEvervault()'
     );
   }
   return evervault;
 }
 
-interface IWithEvervaultProps {
-  WrappedComponent: React.ReactNode;
-  params: {
-    appId: string;
-    useEvervaultContext: boolean;
-  };
-}
-
-export function withEvervault(props: IWithEvervaultProps) {
-  const { WrappedComponent, params } = props;
+export function withEvervault(
+  WrappedComponent: typeof React.Component,
+  params: IWithEvervaultParams
+): React.ReactNode {
   const { appId, authUrl, apiUrl, useEvervaultContext } = params;
-  return class extends React.Component {
+  return class extends React.Component<{}, IWithEvervaultState> {
     constructor(props) {
       super(props);
       evervault.init(appId, { auth: authUrl, api: apiUrl });
       evervault.checkAuth();
       this.state = {
-        evervault
+        evervault,
       };
     }
 
@@ -55,12 +57,13 @@ export function withEvervault(props: IWithEvervaultProps) {
   };
 }
 
-function DataDecrypt({ data }) {
+function DataDecrypt(props: IDataProps): JSX.Element {
+  const { data } = props;
   const [decrypted, setDecrypted] = React.useState(undefined);
 
   React.useEffect(() => {
     let ignore = false;
-    evervault.decrypt(data).then(decryptedData => {
+    evervault.decrypt(data).then((decryptedData) => {
       if (!ignore) {
         setDecrypted(decryptedData);
       }
@@ -73,14 +76,15 @@ function DataDecrypt({ data }) {
   return <>{decrypted}</>;
 }
 
-export function Decrypt({ children, data }) {
+export function Decrypt(props: IDecryptProps): React.ReactNode {
+  const { children, data } = props;
   if (!Boolean(children) && Boolean(data)) {
     return <DataDecrypt data={data} />;
   }
   const [decryptState, setDecryptState] = React.useState({
     loading: true,
     decrypted: undefined,
-    error: undefined
+    error: undefined,
   });
 
   React.useEffect(() => {
@@ -88,21 +92,21 @@ export function Decrypt({ children, data }) {
 
     evervault
       .decrypt(data)
-      .then(decryptedData => {
+      .then((decryptedData) => {
         if (!ignore) {
           setDecryptState({
             loading: false,
             decrypted: decryptedData,
-            error: undefined
+            error: undefined,
           });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         if (!ignore) {
           setDecryptState({
             loading: false,
             decrypted: undefined,
-            error: "An error occurred while decrypting your data"
+            error: 'An error occurred while decrypting your data',
           });
         }
       });
@@ -117,35 +121,38 @@ export function Decrypt({ children, data }) {
 
 Decrypt.propTypes = {
   children: PropTypes.func,
-  data: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
+  data: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 };
 
-export function withEvervaultDecrypt(WrappedComponent, data) {
+export function withEvervaultDecrypt(
+  WrappedComponent: typeof React.Component,
+  data: any
+): React.ReactNode {
   return class extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
         loading: true,
         decrypted: undefined,
-        error: undefined
+        error: undefined,
       };
     }
 
     componentDidMount() {
       evervault
         .decrypt(data)
-        .then(decryptedData => {
+        .then((decryptedData) => {
           this.setState({
             loading: false,
             decrypted: decryptedData,
-            error: undefined
+            error: undefined,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.setState({
             loading: false,
             decrypted: undefined,
-            error: "An error occurred while decrypting your data"
+            error: 'An error occurred while decrypting your data',
           });
         });
     }
@@ -156,19 +163,15 @@ export function withEvervaultDecrypt(WrappedComponent, data) {
   };
 }
 
-export function EvervaultForm({
-  children,
-  initialValues = {},
-  handleSubmit,
-  fieldsToEncrypt
-}) {
+export function EvervaultForm(props: IEvervaultForms): React.ReactNode {
+  const { children, initialValues = {}, handleSubmit, fieldsToEncrypt } = props;
   const [formState, setFormState] = React.useState(initialValues);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
-  const wrappedOnSubmit = async e => {
+  const wrappedOnSubmit = async (e) => {
     e.preventDefault();
 
     let _fieldsToEncrypt = fieldsToEncrypt;
@@ -201,5 +204,5 @@ export function EvervaultForm({
 EvervaultForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   fieldsToEncrypt: PropTypes.array,
-  initialValues: PropTypes.object
+  initialValues: PropTypes.object,
 };
