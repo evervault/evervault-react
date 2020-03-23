@@ -68,45 +68,42 @@ export function Decrypt({ children, data }) {
   if (!Boolean(children) && Boolean(data)) {
     return <DataDecrypt data={data} />;
   }
-  if (Boolean(children) && Boolean(data)) {
-    const [decryptState, setDecryptState] = React.useState({
-      loading: true,
-      decrypted: undefined,
-      error: undefined,
-    });
+  const [decryptState, setDecryptState] = React.useState({
+    loading: true,
+    decrypted: undefined,
+    error: undefined,
+  });
 
-    React.useEffect(() => {
-      let ignore = false;
+  React.useEffect(() => {
+    let ignore = false;
 
-      evervault
-        .decrypt(data)
-        .then((decryptedData) => {
-          if (!ignore) {
-            setDecryptState({
-              loading: false,
-              decrypted: decryptedData,
-              error: undefined,
-            });
-          }
-        })
-        .catch((err) => {
-          if (!ignore) {
-            setDecryptState({
-              loading: false,
-              decrypted: undefined,
-              error: 'An error occurred while decrypting your data',
-            });
-          }
-        });
+    evervault
+      .decrypt(data)
+      .then((decryptedData) => {
+        if (!ignore) {
+          setDecryptState({
+            loading: false,
+            decrypted: decryptedData,
+            error: undefined,
+          });
+        }
+      })
+      .catch((err) => {
+        if (!ignore) {
+          setDecryptState({
+            loading: false,
+            decrypted: undefined,
+            error: 'An error occurred while decrypting your data',
+          });
+        }
+      });
 
-      return () => {
-        ignore = true;
-      };
-    }, []);
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
-    return children({ ...decryptState });
-  }
-  throw new Error('Decrypt component requires data to be provided');
+  return children({ ...decryptState });
 }
 
 Decrypt.propTypes = {
