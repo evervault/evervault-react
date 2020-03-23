@@ -10,6 +10,7 @@ import {
   IDataProps,
   IDecryptProps,
   IEvervaultForms,
+  IChildChangeEvent,
 } from './typings';
 
 export const EvervaultContext = React.createContext(undefined);
@@ -35,7 +36,7 @@ export function withEvervault(
 ): React.ReactNode {
   const { appId, authUrl, apiUrl, useEvervaultContext } = params;
   return class extends React.Component<{}, IWithEvervaultState> {
-    constructor(props) {
+    constructor(props: object) {
       super(props);
       evervault.init(appId, { auth: authUrl, api: apiUrl });
       evervault.checkAuth();
@@ -63,7 +64,7 @@ function DataDecrypt(props: IDataProps): JSX.Element {
 
   React.useEffect(() => {
     let ignore = false;
-    evervault.decrypt(data).then((decryptedData) => {
+    evervault.decrypt(data).then((decryptedData: any) => {
       if (!ignore) {
         setDecrypted(decryptedData);
       }
@@ -92,7 +93,7 @@ export function Decrypt(props: IDecryptProps): React.ReactNode {
 
     evervault
       .decrypt(data)
-      .then((decryptedData) => {
+      .then((decryptedData: any) => {
         if (!ignore) {
           setDecryptState({
             loading: false,
@@ -101,7 +102,7 @@ export function Decrypt(props: IDecryptProps): React.ReactNode {
           });
         }
       })
-      .catch((err) => {
+      .catch((err: object) => {
         if (!ignore) {
           setDecryptState({
             loading: false,
@@ -129,7 +130,7 @@ export function withEvervaultDecrypt(
   data: any
 ): React.ReactNode {
   return class extends React.Component {
-    constructor(props) {
+    constructor(props: any) {
       super(props);
       this.state = {
         loading: true,
@@ -141,14 +142,14 @@ export function withEvervaultDecrypt(
     componentDidMount() {
       evervault
         .decrypt(data)
-        .then((decryptedData) => {
+        .then((decryptedData: any) => {
           this.setState({
             loading: false,
             decrypted: decryptedData,
             error: undefined,
           });
         })
-        .catch((err) => {
+        .catch((err: object) => {
           this.setState({
             loading: false,
             decrypted: undefined,
@@ -165,13 +166,15 @@ export function withEvervaultDecrypt(
 
 export function EvervaultForm(props: IEvervaultForms): React.ReactNode {
   const { children, initialValues = {}, handleSubmit, fieldsToEncrypt } = props;
-  const [formState, setFormState] = React.useState(initialValues);
+  const [formState, setFormState] = React.useState<any | undefined>(
+    initialValues
+  );
 
-  const handleChange = (e) => {
+  const handleChange = (e: IChildChangeEvent) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
-  const wrappedOnSubmit = async (e) => {
+  const wrappedOnSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     let _fieldsToEncrypt = fieldsToEncrypt;

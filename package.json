@@ -23,6 +23,9 @@
     "@babel/preset-react": "^7.7.4",
     "@types/react": "^16.9.25",
     "babel-loader": "^8.0.6",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   }
