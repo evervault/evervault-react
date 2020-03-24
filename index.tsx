@@ -11,6 +11,7 @@ import {
   IDecryptProps,
   IEvervaultForms,
   IChildChangeEvent,
+  IChangeEventTarget,
 } from './typings';
 
 export const EvervaultContext = React.createContext(undefined);
@@ -170,11 +171,11 @@ export function EvervaultForm(props: IEvervaultForms): React.ReactNode {
     initialValues
   );
 
-  const handleChange = (e: IChildChangeEvent) => {
+  const handleChange = (e: IChildChangeEvent): void => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
-  const wrappedOnSubmit = async (e: React.FormEvent) => {
+  const wrappedOnSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     let _fieldsToEncrypt = fieldsToEncrypt;
