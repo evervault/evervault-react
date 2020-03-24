@@ -11,7 +11,6 @@ import {
   IDecryptProps,
   IEvervaultForms,
   IChildChangeEvent,
-  IChangeEventTarget,
 } from './typings';
 
 export const EvervaultContext = React.createContext(undefined);
