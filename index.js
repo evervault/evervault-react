@@ -149,7 +149,7 @@ export function withEvervaultDecrypt(WrappedComponent, data) {
 
 export function EvervaultForm({
   children,
-  initialValues = {},
+  initialValues,
   handleSubmit,
   fieldsToEncrypt,
 }) {
