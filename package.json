@@ -1,6 +1,6 @@
 {
   "name": "@evervault/react",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "React package for the Evervault SDK",
   "main": "./build/lib/index.js",
   "scripts": {
