@@ -1,196 +1,129 @@
 /** @format */
 
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
-import evervault from '@evervault/sdk';
+import React from 'react';
+
+const EVERVAULT_URL = 'https://js.evervault.com/v1';
+const EVERVAULT_URL_REGEX = /^https:\/\/js\.evervault\.com\/v1\/?(\?.*)?$/;
+const injectScript = () => {
+  const script = document.createElement('script');
+  script.src = EVERVAULT_URL;
+
+  const headOrBody = document.head || document.body;
+
+  if (!headOrBody) {
+    throw new Error(
+      'Expected document.body not to be null. Evervault.js requires a <body> element.'
+    );
+  }
+
+  headOrBody.appendChild(script);
+
+  return script;
+};
+
+let evervaultPromise = null;
+
+const loadScript = () => {
+  // Ensure that we only attempt to load Evervault.js at most once
+  if (evervaultPromise !== null) {
+    return evervaultPromise;
+  }
+
+  evervaultPromise = new Promise((resolve, reject) => {
+    if (typeof window === 'undefined') {
+      resolve(null);
+      return;
+    }
+
+    if (window.Evervault) {
+      console.warn('Evervault has already been loaded');
+    }
+
+    if (window.Evervault) {
+      resolve(window.Evervault);
+      return;
+    }
+
+    try {
+      let script = findScript();
+
+      if (script) {
+        console.warn('Evervault has already been loaded');
+      } else if (!script) {
+        script = injectScript();
+      }
+
+      script.addEventListener('load', () => {
+        if (window.Evervault) {
+          resolve(window.Evervault);
+        } else {
+          reject(new Error('Evervault.js not available'));
+        }
+      });
+
+      script.addEventListener('error', () => {
+        reject(new Error('Failed to load Evervault.js'));
+      });
+    } catch (error) {
+      reject(error);
+      return;
+    }
+  });
+
+  return evervaultPromise;
+};
+
+const findScript = () => {
+  const scripts = document.querySelectorAll<HTMLScriptElement>(
+    `script[src^="${EVERVAULT_URL}"]`
+  );
+
+  for (let i = 0; i < scripts.length; i++) {
+    const script = scripts[i];
+
+    if (!EVERVAULT_URL_REGEX.test(script.src)) {
+      continue;
+    }
+
+    return script;
+  }
+
+  return null;
+};
+
+const loadEvervault = async () =>  {
+  const evervaultPromise = Promise.resolve().then(() => loadScript());
+
+  let loadCalled = false;
+
+  evervaultPromise.catch((err) => {
+    if (!loadCalled) {
+      console.warn(err);
+    }
+  });
+
+  loadCalled = true;
+  return evervaultPromise.then(() => window.Evervault)
+}
 
 export const EvervaultContext = React.createContext(undefined);
-export const EvervaultProvider = EvervaultContext.Provider;
-export const EvervaultConsumer = EvervaultContext.Consumer;
+
+export const EvervaultProvider = ({ teamId, children, ...props }) => {
+  const [ev, setEv] = React.useState(undefined);
+
+  React.useEffect(() => {
+    loadEvervault().then((evervault) => setEv(new evervault(teamId)))
+  }, [loadEvervault]);
+
+  return <EvervaultContext.Provider {...props} value={ev}>{children}</EvervaultContext.Provider>;
+}
 
 export function useEvervault() {
-  const evervault = React.useContext(EvervaultContext);
-  if (!evervault) {
-    throw new Error('No context found for evervault');
-  }
-  if (typeof useContext !== 'function') {
+  if (typeof React.useContext !== 'function') {
     throw new Error(
       'You must use React >= 16.8 in order to use useEvervault()'
     );
   }
+  const evervault = React.useContext(EvervaultContext);
   return evervault;
 }
-
-export function withEvervault(WrappedComponent, params) {
-  const { appId, authUrl, apiUrl, useEvervaultContext } = params;
-  return class extends React.Component {
-    constructor(props) {
-      super(props);
-      evervault.init(appId, { auth: authUrl, api: apiUrl });
-      evervault.checkAuth();
-      this.state = {
-        evervault,
-      };
-    }
-
-    render() {
-      if (useEvervaultContext) {
-        return (
-          <EvervaultProvider value={this.state.evervault}>
-            <WrappedComponent />
-          </EvervaultProvider>
-        );
-      }
-      return <WrappedComponent evervault={this.state.evervault} />;
-    }
-  };
-}
-
-function DataDecrypt({ data }) {
-  const [decrypted, setDecrypted] = React.useState(undefined);
-
-  React.useEffect(() => {
-    let ignore = false;
-    evervault.decrypt(data).then((decryptedData) => {
-      if (!ignore) {
-        setDecrypted(decryptedData);
-      }
-    });
-    return () => {
-      ignore = true;
-    };
-  }, [data]);
-
-  return <>{decrypted}</>;
-}
-
-export function Decrypt({ children, data }) {
-  if (!Boolean(children) && Boolean(data)) {
-    return <DataDecrypt data={data} />;
-  }
-  const [decryptState, setDecryptState] = React.useState({
-    loading: true,
-    decrypted: undefined,
-    error: undefined,
-  });
-
-  React.useEffect(() => {
-    let ignore = false;
-
-    evervault
-      .decrypt(data)
-      .then((decryptedData) => {
-        if (!ignore) {
-          setDecryptState({
-            loading: false,
-            decrypted: decryptedData,
-            error: undefined,
-          });
-        }
-      })
-      .catch((err) => {
-        if (!ignore) {
-          setDecryptState({
-            loading: false,
-            decrypted: undefined,
-            error: 'An error occurred while decrypting your data',
-          });
-        }
-      });
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  return children({ ...decryptState });
-}
-
-Decrypt.propTypes = {
-  children: PropTypes.func,
-  data: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-};
-
-export function withEvervaultDecrypt(WrappedComponent, data) {
-  return class extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        loading: true,
-        decrypted: undefined,
-        error: undefined,
-      };
-    }
-
-    componentDidMount() {
-      evervault
-        .decrypt(data)
-        .then((decryptedData) => {
-          this.setState({
-            loading: false,
-            decrypted: decryptedData,
-            error: undefined,
-          });
-        })
-        .catch((err) => {
-          this.setState({
-            loading: false,
-            decrypted: undefined,
-            error: 'An error occurred while decrypting your data',
-          });
-        });
-    }
-
-    render() {
-      return <WrappedComponent {...this.state} />;
-    }
-  };
-}
-
-export function EvervaultForm({
-  children,
-  initialValues,
-  handleSubmit,
-  fieldsToEncrypt,
-}) {
-  const [formState, setFormState] = React.useState(initialValues);
-
-  const handleChange = (e) => {
-    setFormState({ ...formState, [e.target.name]: e.target.value });
-  };
-
-  const wrappedOnSubmit = async (e) => {
-    e.preventDefault();
-
-    let _fieldsToEncrypt = fieldsToEncrypt;
-    if (!Boolean(_fieldsToEncrypt)) {
-      _fieldsToEncrypt = Object.keys(formState);
-    }
-    if (_fieldsToEncrypt.length < 1) {
-      handleSubmit(formState);
-    }
-
-    let submissionObject = Object.assign({}, formState);
-    for (let i = 0; i < _fieldsToEncrypt.length; i++) {
-      if (formState[_fieldsToEncrypt[i]]) {
-        submissionObject[_fieldsToEncrypt[i]] = await evervault.encrypt(
-          formState[_fieldsToEncrypt[i]]
-        );
-      }
-    }
-
-    return handleSubmit(submissionObject);
-  };
-
-  return (
-    <form onSubmit={wrappedOnSubmit}>
-      {children({ values: { ...formState }, handleChange })}
-    </form>
-  );
-}
-
-EvervaultForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  fieldsToEncrypt: PropTypes.array,
-  initialValues: PropTypes.object,
-};
