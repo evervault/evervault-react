@@ -103,7 +103,9 @@ const loadEvervault = async () =>  {
   });
 
   loadCalled = true;
-  return evervaultPromise.then(() => window.Evervault)
+  return evervaultPromise.then(() => {
+    if (typeof window !== 'undefined') window.Evervault
+  })
 }
 
 export const EvervaultContext = React.createContext(undefined);
