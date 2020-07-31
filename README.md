@@ -45,7 +45,7 @@ export const MyComponent = ({ someState }) => {
 ```
 
 ## Using Evervault React with Evervault Cages
-Using Evervault react meansyour customer's data never leaves their device unencrypted.
+Using Evervault react means your customer's data never leaves their device unencrypted.
 
 Evervault React encrypts data that can be sent directly into an Evervault Cage and operated on.
 
