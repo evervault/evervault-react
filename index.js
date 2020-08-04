@@ -74,9 +74,10 @@ const loadScript = () => {
 };
 
 const findScript = () => {
-  const scripts = document.querySelectorAll<HTMLScriptElement>(
-    `script[src^="${EVERVAULT_URL}"]`
-  );
+  const scripts =
+    document.querySelectorAll <
+    HTMLScriptElement >
+    `script[src^="${EVERVAULT_URL}"]`;
 
   for (let i = 0; i < scripts.length; i++) {
     const script = scripts[i];
@@ -91,7 +92,7 @@ const findScript = () => {
   return null;
 };
 
-const loadEvervault = async () =>  {
+const loadEvervault = async () => {
   const evervaultPromise = Promise.resolve().then(() => loadScript());
 
   let loadCalled = false;
@@ -104,9 +105,9 @@ const loadEvervault = async () =>  {
 
   loadCalled = true;
   return evervaultPromise.then(() => {
-    if (typeof window !== 'undefined') window.Evervault
-  })
-}
+    if (typeof window !== 'undefined') return window.Evervault;
+  });
+};
 
 export const EvervaultContext = React.createContext(undefined);
 
@@ -114,11 +115,15 @@ export const EvervaultProvider = ({ teamId, children, ...props }) => {
   const [ev, setEv] = React.useState(undefined);
 
   React.useEffect(() => {
-    loadEvervault().then((evervault) => setEv(new evervault(teamId)))
+    loadEvervault().then((evervault) => setEv(new evervault(teamId)));
   }, [loadEvervault]);
 
-  return <EvervaultContext.Provider {...props} value={ev}>{children}</EvervaultContext.Provider>;
-}
+  return (
+    <EvervaultContext.Provider {...props} value={ev}>
+      {children}
+    </EvervaultContext.Provider>
+  );
+};
 
 export function useEvervault() {
   if (typeof React.useContext !== 'function') {
