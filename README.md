@@ -1,5 +1,5 @@
 <p>
-  <a href="https://welcome.evervault.com/"><img src="res/logo.svg"></a>
+[![Evervault](https://evervault.com/evervault.svg)](https://welcome.evervault.com/)
 </p>
 
 # Evervault React.js SDK
