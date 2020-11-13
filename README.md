@@ -77,7 +77,7 @@ async evervault.encrypt(data: Object | String);
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/evervault/evervault-js.
+Bug reports and pull requests are welcome on GitHub at https://github.com/evervault/evervault-react.
 
 ## Feedback
 
