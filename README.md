@@ -63,7 +63,9 @@ export const MyComponent = ({ someState }) => {
 
 ## Reference
 
-At present, there's one function available in the React.js SDK: `evervault.encrypt()`.
+The Evervault React.js SDK exposes one function.
+
+### evervault.encrypt()
 
 `evervault.encrypt()` encrypts data for use in your [Cages](https://docs.evervault.com/tutorial). To encrypt data on the client, simply pass an object or string into the `evervault.encrypt()` function. Store the encrypted data in your database as normal. Send it to your API and use our [Node.js SDK](https://docs.evervault.com/nodejs) to forward the data to your Cage.
 
