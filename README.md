@@ -1,6 +1,4 @@
-<p>
 [![Evervault](https://evervault.com/evervault.svg)](https://welcome.evervault.com/)
-</p>
 
 # Evervault React.js SDK
 
