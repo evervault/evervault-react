@@ -115,9 +115,14 @@ export const EvervaultProvider = ({ teamId, children, ...props }) => {
   const [ev, setEv] = React.useState(undefined);
   const METRICS_URL = 'https://metrics.evervault.com';
 
-  const configUrls = {
-    keysUrl: process.env.REACT_APP_EV_API_URL,
-    metricsUrl: METRICS_URL
+  const config = {
+    urls : {
+      keysUrl: process.env.REACT_APP_EV_API_URL,
+      metricsUrl: METRICS_URL
+    },
+    test : {
+
+    }
   };
 
   React.useEffect(() => {
