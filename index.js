@@ -111,15 +111,10 @@ const loadEvervault = async () => {
 
 export const EvervaultContext = React.createContext(undefined);
 
-export const EvervaultProvider = ({ teamId, children, ...props }) => {
+export const EvervaultProvider = ({ teamId, customConfig, children, ...props }) => {
   const [ev, setEv] = React.useState(undefined);
-  const METRICS_URL = 'https://metrics.evervault.com';
 
-  const customConfig = {
-    urls: {
-      keysUrl: process.env.REACT_APP_EV_API_URL
-    }
-  };
+  console.log(JSON.stringify(customConfig, undefined, 2));
 
   React.useEffect(() => {
     loadEvervault().then((evervault) => setEv(new evervault(teamId, customConfig)));
