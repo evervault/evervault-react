@@ -111,11 +111,11 @@ const loadEvervault = async () => {
 
 export const EvervaultContext = React.createContext(undefined);
 
-export const EvervaultProvider = ({ teamId, children, ...props }) => {
+export const EvervaultProvider = ({ teamId, customConfig, children, ...props }) => {
   const [ev, setEv] = React.useState(undefined);
 
   React.useEffect(() => {
-    loadEvervault().then((evervault) => setEv(new evervault(teamId)));
+    loadEvervault().then((evervault) => setEv(new evervault(teamId, customConfig)));
   }, [loadEvervault]);
 
   return (
