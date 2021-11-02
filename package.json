@@ -1,6 +1,6 @@
 {
   "name": "@evervault/react",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "React package for the Evervault SDK",
   "main": "./build/lib/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "npx webpack --mode=production"
   },
   "peerDependencies": {
-    "react": "^16.12.0"
+    "react": ">=16.12.0"
   },
   "author": "",
   "license": "ISC",
