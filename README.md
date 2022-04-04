@@ -76,9 +76,9 @@ async evervault.encrypt(data: Object | String);
 | data | Object or String | Data to be encrypted. |
 
 
-### evervault.inputs()
+### evervault.input.generate()
 
-`evervault.inputs()` initialises Evervault Inputs which make it easy to collect encrypted cardholder data in a completely PCI-compliant environment.
+`evervault.input.generate()` initialises Evervault Inputs which make it easy to collect encrypted cardholder data in a completely PCI-compliant environment.
 
 Evervault Inputs are served within an iFrame retrieved directly from Evervault’s PCI-compliant infrastructure, which can reduce your PCI DSS compliance scope to the simplest form (SAQ-A) once integrated correctly.
 
