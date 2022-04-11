@@ -28,12 +28,11 @@ Once installed, initialize the React.js SDK with your team's unique ID found in 
 
 ```javascript
 import { EvervaultProvider } from "@evervault/react";
-
-export const App = () => {
+export const App = () => (
   <EvervaultProvider teamId={"<YOUR-TEAM-ID>"}>
     <ChildComponent />
   </EvervaultProvider>;
-};
+);
 ```
 
 ## Reference
@@ -70,7 +69,7 @@ export const MyComponent = ({ someState }) => {
   React.useEffect(() => encryptState(), [encryptState])
 
   return (
-    { encryptedState && (<p>encryptedState</p>) }
+    {encryptedState && <p>encryptedState</p>}
   );
 }
 ```
