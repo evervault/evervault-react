@@ -68,12 +68,12 @@ The Evervault React.js SDK exposes two functions.
 `evervault.encrypt()` encrypts data for use in your [Cages](https://docs.evervault.com/tutorial). To encrypt data on the client, simply pass an object or string into the `evervault.encrypt()` function. Store the encrypted data in your database as normal. Send it to your API and use our [Node.js SDK](https://docs.evervault.com/nodejs) to forward the data to your Cage.
 
 ```javascript
-async evervault.encrypt(data: Object | String);
+async evervault.encrypt(data: Object | Array | String | Number);
 ```
 
-| Parameter | Type             | Description           |
-| --------- | ---------------- | --------------------- |
-| data      | Object or String | Data to be encrypted. |
+| Parameter | Type                                    | Description           |
+| --------- | --------------------------------------- | --------------------- |
+| data      | `Object`, `Array`, `String` or `Number` | Data to be encrypted. |
 
 ### evervault.inputs()
 
