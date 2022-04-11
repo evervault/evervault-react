@@ -27,13 +27,13 @@ npm i @evervault/react
 To make Evervault available for use in your app, use an `EvervaultProvider` component as a provider for your app.
 
 ```javascript
-import { EvervaultProvider } from '@evervault/react';
+import { EvervaultProvider } from "@evervault/react";
 
 export const App = () => {
-  <EvervaultProvider teamId={'<YOUR-TEAM-ID>'}>
+  <EvervaultProvider teamId={"<YOUR-TEAM-ID>"}>
     <ChildComponent />
-  </EvervaultProvider>
-}
+  </EvervaultProvider>;
+};
 ```
 
 Then any time you want to encrypt data, simply import `useEvervault` in your component.
@@ -42,17 +42,17 @@ Then any time you want to encrypt data, simply import `useEvervault` in your com
 import React from 'react';
 import { useEvervault } from '@evervault/react';
 
-export const MyComponent = ({ someState }) => { 
+export const MyComponent = ({ someState }) => {
   const evervault = useEvervault();
   const [encryptedState, setEncryptedState] = React.useState(undefined);
-  
+
   const encryptState = React.useCallback(
-    async () => setEncryptedState(await evervault.encrypt(someState)), 
-    [setEncryptedState, evervault]  
+    async () => setEncryptedState(await evervault.encrypt(someState)),
+    [setEncryptedState, evervault]
   );
 
   React.useEffect(() => encryptState(), [encryptState])
-  
+
   return (
     { encryptedState && (<p>encryptedState</p>) }
   );
@@ -71,10 +71,9 @@ The Evervault React.js SDK exposes two functions.
 async evervault.encrypt(data: Object | String);
 ```
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| data | Object or String | Data to be encrypted. |
-
+| Parameter | Type             | Description           |
+| --------- | ---------------- | --------------------- |
+| data      | Object or String | Data to be encrypted. |
 
 ### evervault.inputs()
 
@@ -88,19 +87,19 @@ Simply pass the id of the element in which the iFrame should be embedded.
 const inputs = evervault.inputs(id: String);
 ```
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| id | string | Id of the element in which the Evervault Inputs iFrame should be embedded |
+| Parameter | Type   | Description                                                               |
+| --------- | ------ | ------------------------------------------------------------------------- |
+| id        | string | Id of the element in which the Evervault Inputs iFrame should be embedded |
 
 #### Retrieving card data
 
-There are two ways of accessing encrypted card data once it has been entered. 
+There are two ways of accessing encrypted card data once it has been entered.
 
 ##### `onChange` hook
 
 This option is best when you are looking to handle the card values in realtime, like displaying validation errors as a user is inputting their card data. The callback for the hook is run every time your user updates the card data.
 
-``` javascript
+```javascript
 const evervault = useEvervault();
 const [encryptedData, setEncryptedData] = useState(undefined);
 
@@ -137,7 +136,7 @@ const initEvForm = async () => {
 
 This option is best when you are looking to retrieve card data occasionally, like when your form is submitted.
 
-``` javascript
+```javascript
 const cardData = await inputs.getData();
 // `cardData` is an object containing details about the card data your user has entered
 // {
@@ -150,7 +149,7 @@ const cardData = await inputs.getData();
 //   },
 //   "isValid": true,
 //   "isPotentiallyValid": true,
-//   "isEmpty": false,  
+//   "isEmpty": false,
 //   "error": {
 //     "type": "invalid_pan",
 //     "message": "The credit card number you entered was invalid"
