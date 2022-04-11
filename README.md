@@ -22,9 +22,9 @@ Our React.js SDK is distributed via [npm](https://www.npmjs.com/), and can be in
 npm i @evervault/react
 ```
 
-## Setup
+## Initialization
 
-To make Evervault available for use in your app, use an `EvervaultProvider` component as a provider for your app.
+Once installed, initialize the React.js SDK with your team's unique ID found in the [Settings](https://app.evervault.com/settings). Use an `EvervaultProvider` component as a provider for your app.
 
 ```javascript
 import { EvervaultProvider } from "@evervault/react";
@@ -36,9 +36,25 @@ export const App = () => {
 };
 ```
 
-Then any time you want to encrypt data, simply import `useEvervault` in your component.
+## Reference
+
+The Evervault React.js SDK exposes two functions.
+
+### evervault.encrypt()
+
+`evervault.encrypt()` encrypts data for use in your [Cages](https://docs.evervault.com/tutorial). To encrypt data on the client, simply pass the value into the `evervault.encrypt()` function. Store the encrypted data in your database as normal. Send it to your API and use our [Node.js SDK](https://docs.evervault.com/nodejs) to forward the data to your Cage.
 
 ```javascript
+async evervault.encrypt(data: Object | Array | String | Number);
+```
+
+| Parameter | Type                                    | Description           |
+| --------- | --------------------------------------- | --------------------- |
+| data      | `Object`, `Array`, `String` or `Number` | Data to be encrypted. |
+
+Any time you want to encrypt data, simply import `useEvervault` in your component.
+
+```jsx
 import React from 'react';
 import { useEvervault } from '@evervault/react';
 
@@ -59,22 +75,6 @@ export const MyComponent = ({ someState }) => {
 }
 ```
 
-## Reference
-
-The Evervault React.js SDK exposes two functions.
-
-### evervault.encrypt()
-
-`evervault.encrypt()` encrypts data for use in your [Cages](https://docs.evervault.com/tutorial). To encrypt data on the client, simply pass an object or string into the `evervault.encrypt()` function. Store the encrypted data in your database as normal. Send it to your API and use our [Node.js SDK](https://docs.evervault.com/nodejs) to forward the data to your Cage.
-
-```javascript
-async evervault.encrypt(data: Object | Array | String | Number);
-```
-
-| Parameter | Type                                    | Description           |
-| --------- | --------------------------------------- | --------------------- |
-| data      | `Object`, `Array`, `String` or `Number` | Data to be encrypted. |
-
 ### evervault.inputs()
 
 `evervault.inputs()` initializes Evervault Inputs which make it easy to collect encrypted cardholder data in a completely PCI-compliant environment.
@@ -83,17 +83,40 @@ Evervault Inputs are served within an iFrame retrieved directly from Evervaultâ€
 
 Simply pass the id of the element in which the iFrame should be embedded.
 
+We also support [themes](https://docs.evervault.com/concepts/inputs/about#customising-inputs) so you can customise how Inputs looks in your UI.
+
 ```javascript
-const inputs = evervault.inputs(id: String);
+evervault.inputs(id: String, theme: String);
 ```
 
 | Parameter | Type   | Description                                                               |
 | --------- | ------ | ------------------------------------------------------------------------- |
 | id        | string | Id of the element in which the Evervault Inputs iFrame should be embedded |
+| theme     | string | Optional theme for styling Inputs, currently supported: minimal           |
 
 #### Retrieving card data
 
 There are two ways of accessing encrypted card data once it has been entered.
+In each case, a `cardData` object containing details about the card data your user has entered is returned.
+
+```json
+{
+  "card": {
+    "type": "visa_credit",
+    "number": "ev:encrypted:abc123",
+    "cvc": "ev:encrypted:def456",
+    "expMonth": "01",
+    "expYear": "23"
+  },
+  "isValid": true,
+  "isPotentiallyValid": true,
+  "isEmpty": false,
+  "error": {
+    "type": "invalid_pan",
+    "message": "The credit card number you entered was invalid"
+  }
+}
+```
 
 ##### `onChange` hook
 
@@ -106,23 +129,6 @@ const [encryptedData, setEncryptedData] = useState(undefined);
 const initEvForm = async () => {
   const encryptedInput = evervault?.input?.generate("encryptedInput");
   encryptedInput?.on("change", async (cardData) => {
-    // `cardData` is an object containing details about the card data your user has entered
-    // {
-    //   "card": {
-    //     "type": "ev:encrypted:abc123",
-    //     "number": "ev:encrypted:def456",
-    //     "cvc": "ev:encrypted:ghi789",
-    //     "expMonth": "ev:encrypted:jkl012",
-    //     "expYear": "ev:encrypted:mno345"
-    //   },
-    //   "isValid": true,
-    //   "isPotentiallyValid": true,
-    //   "isEmpty": false,
-    //   "error": {
-    //     "type": "invalid_pan",
-    //     "message": "The credit card number you entered was invalid"
-    //   }
-    // }
     setEncryptedData(cardData);
   });
 
@@ -138,23 +144,6 @@ This option is best when you are looking to retrieve card data occasionally, lik
 
 ```javascript
 const cardData = await inputs.getData();
-// `cardData` is an object containing details about the card data your user has entered
-// {
-//   "card": {
-//     "type": "ev:encrypted:abc123",
-//     "number": "ev:encrypted:def456",
-//     "cvc": "ev:encrypted:ghi789",
-//     "expMonth": "ev:encrypted:jkl012",
-//     "expYear": "ev:encrypted:mno345"
-//   },
-//   "isValid": true,
-//   "isPotentiallyValid": true,
-//   "isEmpty": false,
-//   "error": {
-//     "type": "invalid_pan",
-//     "message": "The credit card number you entered was invalid"
-//   }
-// }
 ```
 
 ## Contributing
