@@ -7,7 +7,8 @@ module.exports = {
     path: path.resolve(__dirname, './build/lib'),
     filename: 'index.js',
     library: '',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    globalObject: 'typeof self !== \'undefined\' ? self : this'
   },
   module: {
     rules: [
@@ -20,7 +21,8 @@ module.exports = {
           plugins: [
             '@babel/plugin-proposal-class-properties',
             '@babel/plugin-transform-react-jsx',
-            '@babel/plugin-transform-regenerator'
+            '@babel/plugin-transform-regenerator',
+            '@babel/plugin-transform-runtime',
           ]
         }
       },
