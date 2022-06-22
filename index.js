@@ -112,6 +112,14 @@ const loadEvervault = async () => {
 export const EvervaultContext = React.createContext(undefined);
 
 export const EvervaultProvider = ({ teamId, customConfig, children, ...props }) => {
+  if(typeof window === 'undefined') {
+    return (
+      <EvervaultContext.Provider>
+        {children}
+      </EvervaultContext.Provider>
+    );
+  }
+
   const [ev, setEv] = React.useState(undefined);
 
   React.useEffect(() => {
@@ -126,6 +134,10 @@ export const EvervaultProvider = ({ teamId, customConfig, children, ...props }) 
 };
 
 export function useEvervault() {
+  if(typeof window === 'undefined') {
+    return;
+  }
+
   if (typeof React.useContext !== 'function') {
     throw new Error(
       'You must use React >= 16.8 in order to use useEvervault()'
