@@ -133,6 +133,29 @@ export const EvervaultProvider = ({ teamId, customConfig, children, ...props }) 
   );
 };
 
+export const EvervaultInput = ({ onChange, config }) => {
+  if(typeof window === 'undefined') {
+    return (<div id='encryptedInput'></div>)
+  }
+
+  const evervault = useEvervault();
+
+  const initEvForm = async () => {
+    const encryptedInput = evervault?.inputs('encryptedInput', config);
+    encryptedInput?.on('change', async (cardData) => {
+      if (typeof onChange === 'function') {
+        onChange(cardData);
+      }
+    });
+  }
+  
+  React.useEffect(() => {
+    initEvForm();
+  }, [evervault]);
+
+  return (<div id='encryptedInput'></div>)
+}
+
 export function useEvervault() {
   if(typeof window === 'undefined') {
     return;
