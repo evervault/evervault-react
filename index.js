@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-const EVERVAULT_URL = 'https://js.evervault.com/v1';
-const EVERVAULT_URL_REGEX = /^https:\/\/js\.evervault\.com\/v1\/?(\?.*)?$/;
+const EVERVAULT_URL = 'https://js.evervault.com/v2';
+const EVERVAULT_URL_REGEX = /^https:\/\/js\.evervault\.com\/v2\/?(\?.*)?$/;
 const injectScript = () => {
   const script = document.createElement('script');
   script.src = EVERVAULT_URL;
@@ -111,7 +111,7 @@ const loadEvervault = async () => {
 
 export const EvervaultContext = React.createContext(undefined);
 
-export const EvervaultProvider = ({ teamId, customConfig, children, ...props }) => {
+export const EvervaultProvider = ({ teamId, appId, customConfig, children, ...props }) => {
   if(typeof window === 'undefined') {
     return (
       <EvervaultContext.Provider>
@@ -123,7 +123,7 @@ export const EvervaultProvider = ({ teamId, customConfig, children, ...props }) 
   const [ev, setEv] = React.useState(undefined);
 
   React.useEffect(() => {
-    loadEvervault().then((evervault) => setEv(new evervault(teamId, customConfig)));
+    loadEvervault().then((evervault) => setEv(new evervault(teamId, appId, customConfig)));
   }, [loadEvervault]);
 
   return (

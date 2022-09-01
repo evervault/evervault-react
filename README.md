@@ -29,7 +29,7 @@ Once installed, initialize the React.js SDK with your team's unique ID found in 
 ```javascript
 import { EvervaultProvider } from "@evervault/react";
 export const App = () => (
-  <EvervaultProvider teamId={"<YOUR-TEAM-ID>"}>
+  <EvervaultProvider teamId={"<YOUR-TEAM-ID>" appId="<YOUR_APP_ID>"}>
     <ChildComponent />
   </EvervaultProvider>;
 );
