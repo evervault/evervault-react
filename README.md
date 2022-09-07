@@ -12,7 +12,7 @@ For full installation support, [book time here](https://calendly.com/evervault/c
 
 ## Documentation
 
-See the Evervault [React.js SDK documentation](https://docs.evervault.com/reactjs).
+See the Evervault [React.js SDK documentation](https://docs.evervault.com/reference/react-sdk).
 
 ## Installation
 
@@ -41,7 +41,7 @@ The Evervault React.js SDK exposes two functions.
 
 ### evervault.encrypt()
 
-`evervault.encrypt()` encrypts data for use in your [Cages](https://docs.evervault.com/tutorial). To encrypt data on the client, simply pass the value into the `evervault.encrypt()` function. Store the encrypted data in your database as normal. Send it to your API and use our [Node.js SDK](https://docs.evervault.com/nodejs) to forward the data to your Cage.
+`evervault.encrypt()` encrypts data for use in your [Cages](https://docs.evervault.com/tutorial). To encrypt data on the client, simply pass the value into the `evervault.encrypt()` function. Store the encrypted data in your database as normal. Send it to your API and use our [server-side SDKs](https://docs.evervault.com/reference/nodejs-sdk) to forward the data to your Cage.
 
 ```javascript
 async evervault.encrypt(data: Object | Array | String | Number);
