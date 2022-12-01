@@ -134,14 +134,17 @@ export const EvervaultProvider = ({ teamId, appId, customConfig, children, ...pr
 };
 
 export const EvervaultInput = ({ onChange, config }) => {
+  global.evInputsCount = global.evInputsCount ? global.evInputsCount + 1 : 1;
+  const encryptedInputId = `encryptedInput-${global.evInputsCount}`;
+
   if(typeof window === 'undefined') {
-    return (<div id='encryptedInput'></div>)
+    return (<div id={encryptedInputId}></div>)
   }
 
   const evervault = useEvervault();
 
   const initEvForm = async () => {
-    const encryptedInput = evervault?.inputs('encryptedInput', config);
+    const encryptedInput = evervault?.inputs(encryptedInputId, config);
     encryptedInput?.on('change', async (cardData) => {
       if (typeof onChange === 'function') {
         onChange(cardData);
@@ -153,7 +156,7 @@ export const EvervaultInput = ({ onChange, config }) => {
     initEvForm();
   }, [evervault]);
 
-  return (<div id='encryptedInput'></div>)
+  return (<div id={encryptedInputId}></div>)
 }
 
 export function useEvervault() {
