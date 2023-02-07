@@ -8,7 +8,7 @@ The [Evervault](https://evervault.com) React.js SDK is a toolkit for encrypting 
 
 Before starting with the Evervault Node.js SDK, you will need to [create an account](https://app.evervault.com/register) and a team.
 
-For full installation support, [book time here](https://calendly.com/evervault/cages-onboarding).
+For full installation support, [book time here](https://calendly.com/evervault/support).
 
 ## Documentation
 
