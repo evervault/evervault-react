@@ -109,6 +109,7 @@ evervault.inputs(id: String, config: Object);
 | cardNumberLabel            | String | The label for the card number input                                                |
 | expirationDateLabel        | String | The label for the expiration date input                                            |
 | securityCodeLabel          | String | The label for the security code input                                              |
+| expirationDatePlaceholder  | String | The placeholder shown for the expiration date input                                |
 | invalidCardNumberLabel     | String | The message shown on an invalid card number                                        |
 | invalidExpirationDateLabel | String | The message shown on an invalid expiration date                                    |
 | invalidSecurityCodeLabel   | String | The message shown on an invalid security code                                      |
@@ -173,14 +174,15 @@ The iFrame can be localized on initialization by providing a set of labels in th
 await inputs.setLabels({});
 ```
 
-| Parameter                  | Type   | Description                                     |
-| -------------------------- | ------ | ----------------------------------------------- |
-| cardNumberLabel            | String | The label for the card number input             |
-| expirationDateLabel        | String | The label for the expiration date input         |
-| securityCodeLabel          | String | The label for the security code input           |
-| invalidCardNumberLabel     | String | The message shown on an invalid card number     |
-| invalidExpirationDateLabel | String | The message shown on an invalid expiration date |
-| invalidSecurityCodeLabel   | String | The message shown on an invalid security code   |
+| Parameter                  | Type   | Description                                         |
+| -------------------------- | ------ | --------------------------------------------------- |
+| cardNumberLabel            | String | The label for the card number input                 |
+| expirationDateLabel        | String | The label for the expiration date input             |
+| securityCodeLabel          | String | The label for the security code input               |
+| expirationDatePlaceholder  | String | The placeholder shown for the expiration date input |
+| invalidCardNumberLabel     | String | The message shown on an invalid card number         |
+| invalidExpirationDateLabel | String | The message shown on an invalid expiration date     |
+| invalidSecurityCodeLabel   | String | The message shown on an invalid security code       |
 
 ## Contributing
 
