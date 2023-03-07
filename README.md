@@ -113,6 +113,7 @@ evervault.inputs(id: String, config: Object);
 | invalidCardNumberLabel     | String | The message shown on an invalid card number                                        |
 | invalidExpirationDateLabel | String | The message shown on an invalid expiration date                                    |
 | invalidSecurityCodeLabel   | String | The message shown on an invalid security code                                      |
+| disableCVV                 | Boolean | If true the CVV field will not be displayed                                       |
 
 #### Retrieving card data
 
