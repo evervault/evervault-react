@@ -133,7 +133,7 @@ export const EvervaultProvider = ({ teamId, appId, customConfig, children, ...pr
   );
 };
 
-export const EvervaultInput = ({ onChange, config }) => {
+export const EvervaultInput = ({ onChange, config, onInputsLoad }) => {
   global.evInputsCount = global.evInputsCount ? global.evInputsCount + 1 : 1;
   const encryptedInputId = `encryptedInput-${global.evInputsCount}`;
 
@@ -150,6 +150,10 @@ export const EvervaultInput = ({ onChange, config }) => {
         onChange(cardData);
       }
     });
+
+    if(onInputsLoad && encryptedInput?.isInputsLoading != null && encryptedInput.isInputsLoading instanceof Promise) {
+      encryptedInput.isInputsLoading.then(() => onInputsLoad());
+    }
   }
   
   React.useEffect(() => {
