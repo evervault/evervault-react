@@ -137,29 +137,29 @@ The component also supports [themes](/products/inputs/#themes) and custom styl
 | `onChange`                          | Function         | A function that is called whenever the submission changes.                                      |
 | `onInputsLoad`                      | Function         | A function that is called when the iFrame that serves Inputs has loaded.                        |
 | `config`                            | String \| Object | A theme string (supported: default, minimal or material), or a config object for custom styles. |
-| `config.theme`                      | Function         | The base styling for Inputs. Currently supports default, minimal and material.                  |
-| `config.height`                     | Function         | The height of the Evervault Inputs iframe.                                                      |
-| `config.primaryColor`               | Function         | The main theme color.                                                                           |
-| `config.labelColor`                 | Function         | The color CSS property applied to the input labels.                                             |
-| `config.inputBorderColor`           | Function         | The border-color CSS property applied to inputs.                                                |
-| `config.inputTextColor`             | Function         | The color CSS property applied to inputs.                                                       |
-| `config.inputBackgroundColor`       | Function         | The color CSS property applied to the ::placeholder CSS pseudo-element for inputs.              |
-| `config.inputBorderRadius`          | Function         | The border-radius CSS property applied to inputs.                                               |
-| `config.inputHeight`                | Function         | The height CSS property applied to inputs.                                                      |
-| `config.cardNumberLabel`            | Function         | The label for the card number input                                                             |
-| `config.expirationDateLabel`        | Function         | The label for the expiration date input                                                         |
-| `config.securityCodeLabel`          | Function         | The label for the security code input                                                           |
-| `config.expirationDatePlaceholder`  | Function         | The placeholder for the expiration date input                                                   |
-| `config.invalidCardNumberLabel`     | Function         | The message shown on an invalid card number                                                     |
-| `config.invalidExpirationDateLabel` | Function         | The message shown on an invalid expiration date                                                 |
-| `config.invalidSecurityCodeLabel`   | Function         | The message shown on an invalid security code                                                   |
-| `config.fontUrl`                    | Function         | Load a custom font with the Google Fonts API                                                    |
-| `config.fontFamily`                 | Function         | Set the font-family for the fontUrl                                                             |
-| `config.inputFontSize`              | Function         | Set the font-size property of the input attribute                                               |
-| `config.inputBoxShadow`             | Function         | Set the box-shadow property of the input attribute                                              |
-| `config.labelFontSize`              | Function         | Set the font-size property of the label attribute                                               |
-| `config.labelWeight`                | Function         | Set the font-weight property of the label attribute                                             |
-| `config.disableCVV`                 | Function         | Removes the CVV field from Inputs, showing only the Card Number and Expiry fields               |
+| `config.theme`                      | String           | The base styling for Inputs. Currently supports default, minimal and material.                  |
+| `config.height`                     | String           | The height of the Evervault Inputs iframe.                                                      |
+| `config.primaryColor`               | String           | The main theme color.                                                                           |
+| `config.labelColor`                 | String           | The color CSS property applied to the input labels.                                             |
+| `config.inputBorderColor`           | String           | The border-color CSS property applied to inputs.                                                |
+| `config.inputTextColor`             | String           | The color CSS property applied to inputs.                                                       |
+| `config.inputBackgroundColor`       | String           | The color CSS property applied to the ::placeholder CSS pseudo-element for inputs.              |
+| `config.inputBorderRadius`          | String           | The border-radius CSS property applied to inputs.                                               |
+| `config.inputHeight`                | String           | The height CSS property applied to inputs.                                                      |
+| `config.cardNumberLabel`            | String           | The label for the card number input                                                             |
+| `config.expirationDateLabel`        | String           | The label for the expiration date input                                                         |
+| `config.securityCodeLabel`          | String           | The label for the security code input                                                           |
+| `config.expirationDatePlaceholder`  | String           | The placeholder for the expiration date input                                                   |
+| `config.invalidCardNumberLabel`     | String           | The message shown on an invalid card number                                                     |
+| `config.invalidExpirationDateLabel` | String           | The message shown on an invalid expiration date                                                 |
+| `config.invalidSecurityCodeLabel`   | String           | The message shown on an invalid security code                                                   |
+| `config.fontUrl`                    | String           | Load a custom font with the Google Fonts API                                                    |
+| `config.fontFamily`                 | String           | Set the font-family for the fontUrl                                                             |
+| `config.inputFontSize`              | String           | Set the font-size property of the input attribute                                               |
+| `config.inputBoxShadow`             | String           | Set the box-shadow property of the input attribute                                              |
+| `config.labelFontSize`              | String           | Set the font-size property of the label attribute                                               |
+| `config.labelWeight`                | String           | Set the font-weight property of the label attribute                                             |
+| `config.disableCVV`                 | Boolean          | Removes the CVV field from Inputs, showing only the Card Number and Expiry fields               |
 
 ### Retrieving card data
 
@@ -187,7 +187,9 @@ You can see the format of this object below:
   }
 }
 ```
+
 #### onChange()
+
 The callback function is run every time your user updates the card data.
 
 ```javascript
@@ -242,7 +244,6 @@ const config = {
 ### iFrame loading status
 
 If you need to wait for the iFrame that serves Inputs to load before doing some action, you can used the `onInputsLoad` prop callback:
-
 
 ```javascript
 <EvervaultProvider teamId={'<TEAM_ID>'} appId={'<APP_ID>'}>
