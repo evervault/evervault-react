@@ -121,7 +121,7 @@ evervault.inputs(id: String, config: Object);
 | labelWeight                | String | Set the font-weight property of the label attribute                                |
 | disableCVV                 | Boolean | If true the CVV field will not be displayed                                       |
 
-#### Retrieving card data
+### Retrieving card data
 
 There are two ways of accessing encrypted card data once it has been entered.
 In each case, a `cardData` object containing details about the card data your user has entered is returned.
@@ -145,7 +145,7 @@ In each case, a `cardData` object containing details about the card data your us
 }
 ```
 
-##### `onChange` hook
+#### `onChange` hook
 
 This option is best when you are looking to handle the card values in realtime, like displaying validation errors as a user is inputting their card data. The callback for the hook is run every time your user updates the card data.
 
@@ -173,12 +173,34 @@ This option is best when you are looking to retrieve card data occasionally, lik
 const cardData = await inputs.getData();
 ```
 
-#### Localization
+### Localization
 
 The iFrame can be localized on initialization by providing a set of labels in the [config](#config). The labels can then be updated as required using the `setLabels` method.
 
 ```javascript
 await inputs.setLabels({});
+```
+
+### iFrame loading status
+
+If you need to wait for the iFrame that serves inputs to load before doing some action, there is an easy way to do so.
+
+#### isInputsLoaded
+This is a `Promise` that resolves when the iFrame is loaded. You can listen for the iFrame load event by `await`ing this `Promise`, or using `then`:
+
+```javascript
+const evervault = new Evervault('<TEAM_ID>', '<APP_ID>');
+const inputs = evervault.inputs('ev-card-fields');
+
+await inputs.isInputsLoaded;
+
+handleInputsLoaded();
+
+// or
+
+inputs.isInputsLoaded.then(() => {
+    handleInputsLoaded();
+});
 ```
 
 | Parameter                  | Type   | Description                                         |
