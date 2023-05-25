@@ -6,7 +6,7 @@ The [Evervault](https://evervault.com) React.js SDK is a toolkit for encrypting 
 
 ## Getting Started
 
-Before starting with the Evervault Node.js SDK, you will need to [create an account](https://app.evervault.com/register) and a team.
+Before starting with the Evervault React SDK, you will need to [create an account](https://app.evervault.com/register) and a team.
 
 For full installation support, [book time here](https://calendly.com/evervault/support).
 
@@ -18,113 +18,156 @@ See the Evervault [React.js SDK documentation](https://docs.evervault.com/refere
 
 Our React.js SDK is distributed via [npm](https://www.npmjs.com/), and can be installed using your preferred package manager.
 
-```shell
-npm i @evervault/react
+```bash
+# Using npm
+npm install @evervault/react
+
+# Using yarn
+yarn add @evervault/react
 ```
 
-## Initialization
+## Initialize SDK
 
-Once installed, initialize the React.js SDK with your team's unique ID found in the [Settings](https://app.evervault.com/settings). Use an `EvervaultProvider` component as a provider for your app.
+Once installed, initialize the React.js SDK with your Team and App ID found in the [Evervault Dashboard](https://app.evervault.com).
 
-```javascript
-import { EvervaultProvider } from "@evervault/react";
-export const App = () => (
-  <EvervaultProvider teamId={"<YOUR-TEAM-ID>" appId="<YOUR_APP_ID>"}>
-    <ChildComponent />
-  </EvervaultProvider>;
-);
-```
-
-## Reference
-
-The Evervault React.js SDK exposes two functions.
-
-### evervault.encrypt()
-
-`evervault.encrypt()` encrypts data for use in your [Cages](https://docs.evervault.com/tutorial). To encrypt data on the client, simply pass the value into the `evervault.encrypt()` function. Store the encrypted data in your database as normal. Send it to your API and use our [server-side SDKs](https://docs.evervault.com/reference/nodejs-sdk) to forward the data to your Cage.
-
-```javascript
-async evervault.encrypt(data: Object | Array | String | Number);
-```
-
-| Parameter | Type                                    | Description           |
-| --------- | --------------------------------------- | --------------------- |
-| data      | `Object`, `Array`, `String` or `Number` | Data to be encrypted. |
-
-Any time you want to encrypt data, simply import `useEvervault` in your component.
+Use the `<EvervaultProvider>` component as a provider for your app.
 
 ```jsx
-import React from 'react';
-import { useEvervault } from '@evervault/react';
-
-export const MyComponent = ({ someState }) => {
-  const evervault = useEvervault();
-  const [encryptedState, setEncryptedState] = React.useState(undefined);
-
-  const encryptState = React.useCallback(
-    async () => setEncryptedState(await evervault.encrypt(someState)),
-    [setEncryptedState, evervault]
-  );
-
-  React.useEffect(() => encryptState(), [encryptState])
-
+import { EvervaultProvider } from "@evervault/react";
+import ChildComponent from "../ChildComponent";
+export default function App() {
   return (
-    {encryptedState && <p>encryptedState</p>}
+    <EvervaultProvider teamId={"<TEAM_ID>"} appId={"<APP_ID>"}>
+      <ChildComponent />
+    </EvervaultProvider>
   );
 }
 ```
 
-### evervault.inputs()
+## Encrypt a string
 
-`evervault.inputs()` initializes Evervault Inputs which make it easy to collect encrypted cardholder data in a completely PCI-compliant environment.
+Once you've added the `<EvervaultProvider>`, you can access the `useEvervault()` hook in its children. The `useEvervault()` hook returns an initialized instance of the [JavaScript SDK](https://docs.evervault.com/sdks/javascript-sdk), which includes the `encrypt()` function. The `encrypt()` function can can be used to encrypt plaintext data in your application.
 
-Evervault Inputs are served within an iFrame retrieved directly from Evervault’s PCI-compliant infrastructure, which can reduce your PCI DSS compliance scope to the simplest form (SAQ-A) once integrated correctly.
+```jsx
+import { useState } from "react";
+import { useEvervault } from "@evervault/react";
 
-Simply pass the id of the element in which the iFrame should be embedded.
+export default function ChildComponent() {
+  const evervault = useEvervault();
+  const [message, setMessage] = useState("");
 
-We also support [themes](https://docs.evervault.com/concepts/inputs/overview#customising-inputs) so you can customise how Inputs looks in your UI.
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const encryptedMessage = await evervault.encrypt(message);
+    alert(encryptedMessage);
+  };
 
-```javascript
-evervault.inputs(id: String, config: Object);
+  return (
+    <form onSubmit={handleSubmit}>
+      <input value={message} onChange={(e) => setMessage(e.target.value)} />
+      <button>Submit</button>
+    </form>
+  );
+}
 ```
 
-| Parameter | Type   | Description                                                               |
-| --------- | ------ | ------------------------------------------------------------------------- |
-| id        | string | Id of the element in which the Evervault Inputs iFrame should be embedded |
-| config    | Object | A config object for custom styling.                                       |
+---
 
-#### config
+# Reference
 
-| Parameter                  | Type   | Description                                                                        |
-| -------------------------- | ------ | ---------------------------------------------------------------------------------- |
-| theme                      | String | The base styling for Inputs. Currently supports default, minimal and material.     |
-| height                     | String | The height of the Evervault Inputs iframe.                                         |
-| primaryColor               | String | The main theme color.                                                              |
-| labelColor                 | String | The color CSS property applied to the input labels.                                |
-| inputBorderColor           | String | The border-color CSS property applied to inputs.                                   |
-| inputTextColor             | String | The color CSS property applied to inputs.                                          |
-| inputBackgroundColor       | String | The color CSS property applied to the ::placeholder CSS pseudo-element for inputs. |
-| inputBorderRadius          | String | The border-radius CSS property applied to inputs.                                  |
-| inputHeight                | String | The height CSS property applied to inputs.                                         |
-| cardNumberLabel            | String | The label for the card number input                                                |
-| expirationDateLabel        | String | The label for the expiration date input                                            |
-| securityCodeLabel          | String | The label for the security code input                                              |
-| expirationDatePlaceholder  | String | The placeholder shown for the expiration date input                                |
-| invalidCardNumberLabel     | String | The message shown on an invalid card number                                        |
-| invalidExpirationDateLabel | String | The message shown on an invalid expiration date                                    |
-| invalidSecurityCodeLabel   | String | The message shown on an invalid security code                                      |
-| fontUrl                    | String | Load a custom font with the Google Fonts API                                       |
-| fontFamily                 | String | Set the font-family for the fontUrl                                                |
-| inputFontSize              | String | Set the font-size property of the input attribute                                  |
-| inputBoxShadow             | String | Set the box-shadow property of the input attribute                                 |
-| labelFontSize              | String | Set the font-size property of the label attribute                                  |
-| labelWeight                | String | Set the font-weight property of the label attribute                                |
-| disableCVV                 | Boolean | If true the CVV field will not be displayed                                       |
+## `<EvervaultProvider />`
 
-#### Retrieving card data
+The `EvervaultProvider` component exposes the `useEvervault()` hook to any nested components.
+
+```jsx
+<EvervaultProvider teamId={String} appId={String} />
+```
+
+### Props
+
+| Parameter | Type   | Description                                                       |
+| --------- | ------ | ----------------------------------------------------------------- |
+| `teamId`  | String | The unique identifier for your Team. It's found in Team Settings. |
+| `appId`   | String | The unique identifier for your App. It's found in App Settings.   |
+
+---
+
+## `useEvervault()`
+
+The `useEvervault` hook is accessible in children of the `EvervaultProvider`, and returns an initialized instance of the Evervault [JavaScript SDK](https://docs.evervault.com/sdks/javascript-sdk). One of the functions included in the returned object is `encrypt()`, which can be passed any plaintext data structure.
+
+```jsx
+const evervault = useEvervault();
+```
+
+---
+
+### `evervault.encrypt(data)`
+
+Encrypts data using [Evervault Encryption](/security/evervault-encryption). Evervault Strings can be used across all of our products. It is accessible on the returned value from the `useEvervault()` hook. To encrypt data using the React.js SDK, simply pass a `String` or an `Object` into the `evervault.encrypt()` function.
+
+The encrypted data can be passed to your server and stored in your database as normal. It can also be used with any of Evervault’s other services.
+
+```jsx
+const evervault = useEvervault();
+
+const encrypted = await evervault.encrypt("Hello, world!");
+```
+
+| Parameter | Type             | Description          |
+| --------- | ---------------- | -------------------- |
+| `data`    | String \| Object | The data to encrypt. |
+
+---
+
+## `<EvervaultInput />`
+
+The `<EvervaultInput />` component makes it easy to use [Evervault Inputs](/products/inputs) in your React application. Inputs make it easy to collect encrypted cardholder data in a completely PCI-compliant environment.
+
+Evervault Inputs are served within an iFrame retrieved directly from Evervault’s PCI-compliant infrastructure, which can reduce your PCI DSS compliance scope to the simplest form (SAQ A).
+
+Simply include the component in your JSX to get started.
+
+The component also supports [themes](/products/inputs/#themes) and custom styles so you can customise how Inputs looks in your UI.
+
+### Props
+
+| Parameter                           | Type             | Description                                                                                     |
+| ----------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------- |
+| `onChange`                          | Function         | A function that is called whenever the submission changes.                                      |
+| `onInputsLoad`                      | Function         | A function that is called when the iFrame that serves Inputs has loaded.                        |
+| `config`                            | String \| Object | A theme string (supported: default, minimal or material), or a config object for custom styles. |
+| `config.theme`                      | Function         | The base styling for Inputs. Currently supports default, minimal and material.                  |
+| `config.height`                     | Function         | The height of the Evervault Inputs iframe.                                                      |
+| `config.primaryColor`               | Function         | The main theme color.                                                                           |
+| `config.labelColor`                 | Function         | The color CSS property applied to the input labels.                                             |
+| `config.inputBorderColor`           | Function         | The border-color CSS property applied to inputs.                                                |
+| `config.inputTextColor`             | Function         | The color CSS property applied to inputs.                                                       |
+| `config.inputBackgroundColor`       | Function         | The color CSS property applied to the ::placeholder CSS pseudo-element for inputs.              |
+| `config.inputBorderRadius`          | Function         | The border-radius CSS property applied to inputs.                                               |
+| `config.inputHeight`                | Function         | The height CSS property applied to inputs.                                                      |
+| `config.cardNumberLabel`            | Function         | The label for the card number input                                                             |
+| `config.expirationDateLabel`        | Function         | The label for the expiration date input                                                         |
+| `config.securityCodeLabel`          | Function         | The label for the security code input                                                           |
+| `config.expirationDatePlaceholder`  | Function         | The placeholder for the expiration date input                                                   |
+| `config.invalidCardNumberLabel`     | Function         | The message shown on an invalid card number                                                     |
+| `config.invalidExpirationDateLabel` | Function         | The message shown on an invalid expiration date                                                 |
+| `config.invalidSecurityCodeLabel`   | Function         | The message shown on an invalid security code                                                   |
+| `config.fontUrl`                    | Function         | Load a custom font with the Google Fonts API                                                    |
+| `config.fontFamily`                 | Function         | Set the font-family for the fontUrl                                                             |
+| `config.inputFontSize`              | Function         | Set the font-size property of the input attribute                                               |
+| `config.inputBoxShadow`             | Function         | Set the box-shadow property of the input attribute                                              |
+| `config.labelFontSize`              | Function         | Set the font-size property of the label attribute                                               |
+| `config.labelWeight`                | Function         | Set the font-weight property of the label attribute                                             |
+| `config.disableCVV`                 | Function         | Removes the CVV field from Inputs, showing only the Card Number and Expiry fields               |
+
+### Retrieving card data
 
 There are two ways of accessing encrypted card data once it has been entered.
-In each case, a `cardData` object containing details about the card data your user has entered is returned.
+
+In each case, a `cardData` object containing details about the card data your user has entered is returned.
+
+You can see the format of this object below:
 
 ```json
 {
@@ -144,52 +187,70 @@ In each case, a `cardData` object containing details about the card data your us
   }
 }
 ```
-
-##### `onChange` hook
-
-This option is best when you are looking to handle the card values in realtime, like displaying validation errors as a user is inputting their card data. The callback for the hook is run every time your user updates the card data.
+#### onChange()
+The callback function is run every time your user updates the card data.
 
 ```javascript
-const evervault = useEvervault();
-const [encryptedData, setEncryptedData] = useState(undefined);
-
-const initEvForm = async () => {
-  const encryptedInput = evervault?.input?.generate("encryptedInput");
-  encryptedInput?.on("change", async (cardData) => {
-    setEncryptedData(cardData);
-  });
-
-  useEffect(() => {
-    initEvForm();
-  }, [evervault]);
-};
+<EvervaultProvider teamId={"<TEAM_ID>"} appId={"<APP_ID>"}>
+  <div className="App">
+    <EvervaultInput
+      onChange={(encryptedCard) => setEncryptedCard(encryptedCard)}
+    />
+  </div>
+</EvervaultProvider>
 ```
 
-#### `getData` method
+### Localization
 
-This option is best when you are looking to retrieve card data occasionally, like when your form is submitted.
+The iFrame can be localized on initialization by providing a set of labels in the [config](#inputs-params-config).
 
 ```javascript
-const cardData = await inputs.getData();
+const config = {
+  cardNumberLabel: 'Numéro de carte:',
+  expirationDateLabel: 'Date d'expiration:',
+  securityCodeLabel: 'Code de sécurité:'
+}
+
+<EvervaultProvider teamId={'<TEAM_ID>'} appId={'<APP_ID>'}>
+  <div className="App">
+    <EvervaultInput onChange={(encryptedCard) => setEncryptedCard(encryptedCard)} config={config} />
+  </div>
+</EvervaultProvider>
 ```
 
-#### Localization
+### Custom Fonts
 
-The iFrame can be localized on initialization by providing a set of labels in the [config](#config). The labels can then be updated as required using the `setLabels` method.
+A custom font can be loaded from Google's [Fonts API](https://fonts.google.com) and the `font-family` set with the `fontFamily` config paramerter
 
 ```javascript
-await inputs.setLabels({});
+const config = {
+  fontUrl: 'https://fonts.googleapis.com/css2?family=Poppins:wght@100;800&display=swap',
+  fontFamily: 'Poppins, sans-serif',
+  inputFontSize: '20px',
+  inputBoxShadow: '2px 2px 2px 1px rgba(0, 0, 255, .2)',
+  labelFontSize: '13px',
+  labelWeight: '400'
+}
+
+<EvervaultProvider teamId={'<TEAM_ID>'} appId={'<APP_ID>'}>
+  <div className="App">
+    <EvervaultInput onChange={(encryptedCard) => setEncryptedCard(encryptedCard)} config={config} />
+  </div>
+</EvervaultProvider>
 ```
 
-| Parameter                  | Type   | Description                                         |
-| -------------------------- | ------ | --------------------------------------------------- |
-| cardNumberLabel            | String | The label for the card number input                 |
-| expirationDateLabel        | String | The label for the expiration date input             |
-| securityCodeLabel          | String | The label for the security code input               |
-| expirationDatePlaceholder  | String | The placeholder shown for the expiration date input |
-| invalidCardNumberLabel     | String | The message shown on an invalid card number         |
-| invalidExpirationDateLabel | String | The message shown on an invalid expiration date     |
-| invalidSecurityCodeLabel   | String | The message shown on an invalid security code       |
+### iFrame loading status
+
+If you need to wait for the iFrame that serves Inputs to load before doing some action, you can used the `onInputsLoad` prop callback:
+
+
+```javascript
+<EvervaultProvider teamId={'<TEAM_ID>'} appId={'<APP_ID>'}>
+  <div className="App">
+    <EvervaultInput onInputsLoad={() => { console.log("Inputs has loaded!")} />
+  </div>
+</EvervaultProvider>
+```
 
 ## Contributing
 
