@@ -151,8 +151,8 @@ export const EvervaultInput = ({ onChange, config, onInputsLoad }) => {
       }
     });
 
-    if(onInputsLoad && encryptedInput?.isInputsLoading != null && encryptedInput.isInputsLoading instanceof Promise) {
-      encryptedInput.isInputsLoading.then(() => onInputsLoad());
+    if(onInputsLoad && encryptedInput?.isInputsLoaded != null && encryptedInput.isInputsLoaded instanceof Promise) {
+      encryptedInput.isInputsLoaded.then(() => onInputsLoad());
     }
   }
   
