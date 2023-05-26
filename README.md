@@ -248,7 +248,7 @@ If you need to wait for the iFrame that serves Inputs to load before doing some 
 ```javascript
 <EvervaultProvider teamId={'<TEAM_ID>'} appId={'<APP_ID>'}>
   <div className="App">
-    <EvervaultInput onInputsLoad={() => { console.log("Inputs has loaded!")} />
+    <EvervaultInput onInputsLoad={() => { console.log("Inputs has loaded!")}} />
   </div>
 </EvervaultProvider>
 ```
